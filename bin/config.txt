@@ -1,0 +1,5 @@
+margin_sheet = Margin HK3000:0;1;2;Sales Document ID,Net Sales Revenue,Gross Profit on Sales,Gross Profit on Sales %
+Purchase_order_report_sheet = Purchase order report:0;1;2;Sales Order ID,Purchase Order ID
+ic_sales_order_sheet = IC Sales Order:0;1;2;External Reference,Sales Order
+ic_margin_nl = IC Margin NL:0;1;2;Sales Document ID,Gross Profit on Sales
+exchange_rate = Exchange Rate:0;1;2;Exchange Rate

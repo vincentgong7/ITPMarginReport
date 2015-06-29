@@ -1,0 +1,146 @@
+package itpreneurs.itp.report.parser;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class MySheet {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	private String uniqName;
+	private String name;
+	private String title;
+	private int titleRowNumber;
+	private int hederRowNumber;
+	private int dataStartRowNumber;
+	private String[] columnNames;
+	private Map<String, CellPosition> culumnMap;
+	private List<MyRow> itemList;
+
+//	public MySheet(){
+//		
+//	}
+	
+	/**
+	 * @param String uniqName, String name, int titleRowNumber, int hederRowNumber,
+			int dataStartRowNumber, String[] columnNames
+	 */
+	public MySheet(String uniqName, String name, int titleRowNumber, int hederRowNumber,
+			int dataStartRowNumber, String[] columnNames) {
+		this.uniqName = uniqName;
+		this.name = name;
+		this.titleRowNumber = titleRowNumber;
+		this.hederRowNumber = hederRowNumber;
+		this.dataStartRowNumber = dataStartRowNumber;
+		this.dataStartRowNumber = dataStartRowNumber;
+		this.columnNames = columnNames;
+		
+		init();
+	}
+	
+	public void init(){
+		this.culumnMap = new HashMap<String, CellPosition>();
+		this.itemList = new ArrayList<MyRow>();
+		
+		for (String colunmName : this.columnNames) {
+			CellPosition cp = new CellPosition(colunmName);
+			this.culumnMap.put(colunmName, cp);
+		}
+	}
+	
+	public String getUniqName() {
+		return uniqName;
+	}
+
+	public void setUniqName(String uniqName) {
+		this.uniqName = uniqName;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public int getDataStartRowNumber() {
+		return dataStartRowNumber;
+	}
+
+	public void setDataStartRowNumber(int dataStartRowNumber) {
+		this.dataStartRowNumber = dataStartRowNumber;
+	}
+
+	public Map<String, CellPosition> getCulumnMap() {
+		return culumnMap;
+	}
+
+	public void setCulumnMap(Map<String, CellPosition> culumnMap) {
+		this.culumnMap = culumnMap;
+	}
+
+	public List<MyRow> getItemList() {
+		return itemList;
+	}
+
+	public void setItemList(List<MyRow> itemList) {
+		this.itemList = itemList;
+	}
+
+	public String[] getColumnNames() {
+		return columnNames;
+	}
+
+	public void setColumnNames(String[] columnNames) {
+		this.columnNames = columnNames;
+	}
+
+	public int getHederRowNumber() {
+		return hederRowNumber;
+	}
+
+	public void setHederRowNumber(int hederRowNumber) {
+		this.hederRowNumber = hederRowNumber;
+	}
+
+	public int getTitleRowNumber() {
+		return titleRowNumber;
+	}
+
+	public void setTitleRowNumber(int titleRowNumber) {
+		this.titleRowNumber = titleRowNumber;
+	}
+
+	public int getColNewIndex(String colName) {
+		if(this.culumnMap.containsKey(colName)){
+			CellPosition cp = this.culumnMap.get(colName);
+			return cp.newIndex;
+		}else{
+			return 0;
+		}
+	}
+	
+	public int getColRowIndex(String colName){
+		if(this.culumnMap.containsKey(colName)){
+			CellPosition cp = this.culumnMap.get(colName);
+			return cp.rowIndex;
+		}else{
+			return 0;
+		}
+	}
+	
+}

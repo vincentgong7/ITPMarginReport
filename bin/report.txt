@@ -1,0 +1,15 @@
+Margin Report Process
+
+Start processing, folder: /Users/vincentgong/Documents/workspaces/workspace2015JunITP/MarginReport/bin/
+
+File 1: Data_for_Intercompany_Look_up copy 2.xlsx
+
+File 2: Data_for_Intercompany_Look_up copy 3.xlsx
+
+File 3: Data_for_Intercompany_Look_up copy.xlsx
+
+File 4: Data_for_Intercompany_Look_up.xlsx
+
+Output folder: /Users/vincentgong/Documents/workspaces/workspace2015JunITP/MarginReport/bin/output/
+
+Processed File(s): 4 files, cost time: 11473(ms), or: 12(s).
