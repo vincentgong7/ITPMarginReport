@@ -24,7 +24,7 @@ public class MyStringBuffer {
 	
 	public StringBuffer appendLine(String line){
 		sb.append(line);
-		sb.append("\n");
+		sb.append("\r\n");
 		return sb;
 	}
 	public StringBuffer appendLine(){
