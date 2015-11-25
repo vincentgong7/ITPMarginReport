@@ -3,6 +3,10 @@
  */
 package itpreneurs.itp.report.parser;
 
+import itpreneurs.itp.report.model.ConfigColumn;
+import itpreneurs.itp.report.model.ConfigSheet;
+import itpreneurs.itp.report.model.MarginReportConfig;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,6 +18,10 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -36,9 +44,9 @@ public class DataContainer {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String workbookFileName = "/Users/vincentgong/Documents/workspaces/Resource/itpreneurs/report/Data_for_Intercompany_Look_up.xlsx";
-		String configFile = "/Users/vincentgong/Documents/workspaces/Resource/itpreneurs/report/config.txt";
-		String outputFileName = "/Users/vincentgong/Documents/workspaces/Resource/itpreneurs/report/Data_for_Intercompany_Look_up_done.xlsx";
+		String workbookFileName = "/Users/vincentgong/Documents/workspaces/Resource/itpreneurs/temp/test/MarginReport4-4.xlsx";
+		String configFile = "/Users/vincentgong/Documents/workspaces/Resource/itpreneurs/temp/test/config.txt";
+		String outputFileName = "/Users/vincentgong/Documents/workspaces/Resource/itpreneurs/temp/test/output/calculated-MarginReport4-4.xlsx";
 		DataContainer dc = new DataContainer(workbookFileName, outputFileName,
 				configFile);
 		dc.parseData();
@@ -52,7 +60,7 @@ public class DataContainer {
 	private Workbook workbook = null;
 	private DataFormatter formatter = null;
 	private FormulaEvaluator evaluator = null;
-	private String separator = null;
+//	private String separator = null;
 	private String outputFile;
 
 	public DataContainer(String workbookFileName, String outputFileName,
@@ -73,7 +81,6 @@ public class DataContainer {
 		setup();
 	}
 
-
 	public void parseData() {
 		try {
 			openWorkbook(this.workbookFile);
@@ -92,6 +99,8 @@ public class DataContainer {
 		System.out.println("Start parsing.....");
 
 		for (MySheet ms : this.sheetList) {
+			System.out.println("IN SHEET: "+ms.getName());
+			
 			// get the sheets
 			String sheetName = ms.getName();
 			sheet = this.workbook.getSheet(sheetName);
@@ -99,6 +108,7 @@ public class DataContainer {
 			if (sheet.getPhysicalNumberOfRows() > 0) {
 
 				lastRowNum = sheet.getLastRowNum();
+				System.out.println("Last Row is "+lastRowNum);
 				// if the numbers are wrong, then skip
 				if (lastRowNum < ms.getDataStartRowNumber()) {
 					continue;
@@ -107,19 +117,39 @@ public class DataContainer {
 				// Row dataStartRow = sheet.getRow(ms.getDataStartRowNumber());
 				for (int i = ms.getDataStartRowNumber(); i <= lastRowNum; i++) {
 					Row row = sheet.getRow(i);
-
+//					System.out.println("Row Number "+ row.getRowNum());
+					
 					String[] rowValues = new String[ms.getCulumnMap().size()];
+					
 					Iterator<String> cit = ms.getCulumnMap().keySet()
 							.iterator();
 					while (cit.hasNext()) {
 						String key = cit.next();
+//						System.out.println("key is "+key);
 						CellPosition cp = ms.getCulumnMap().get(key);
-						String value = calCell(row.getCell(cp.rowIndex));
-						rowValues[cp.newIndex] = value;
-						// System.out.println(value);
+//						System.out.println("rowindex "+cp.rowIndex);
+						if(row.getCell(cp.rowIndex)==null){
+							rowValues[cp.newIndex]=null;
+							continue;
+						}
+						
+						if(cp.rowIndex>-1 && row.getCell(cp.rowIndex)!=null){
+							String value = calCell(row.getCell(cp.rowIndex));
+							rowValues[cp.newIndex] = value;
+						}
+						else
+							rowValues[cp.newIndex]=null;
 					}
-
+					
+//					if(ms.getCulumnMap().size()!=rowValues.length){
+//						System.out.println();
+//						return;
+//					}
 					MyRow mr = new MyRow(row.getRowNum(), rowValues);
+					
+//					System.out.println("Row Number:"+mr.originRowNumber);
+//					for(int l=0;l<mr.values.length;l++)
+//						System.out.println("Row Values are " + mr.values[l]);
 					ms.getItemList().add(mr);
 				}
 			}
@@ -137,10 +167,11 @@ public class DataContainer {
 			// get the sheets
 			String sheetName = ms.getName();
 			sheet = this.workbook.getSheet(sheetName);
-
+//			System.out.println("sheet name : "+sheetName);
 			// start parse the meta-data of a sheet
 			if (sheet.getPhysicalNumberOfRows() > 0) {
 				lastRowNum = sheet.getLastRowNum();
+				
 
 				// if the numbers are wrong, then skip
 				if (lastRowNum < ms.getTitleRowNumber()
@@ -148,7 +179,7 @@ public class DataContainer {
 						|| lastRowNum < ms.getDataStartRowNumber()) {
 					continue;
 				}
-
+//				lastRowNum++;
 				Row titleRow = sheet.getRow(ms.getTitleRowNumber());
 				Row headerRow = sheet.getRow(ms.getHederRowNumber());
 				// Row dataStartRow = sheet.getRow(ms.getDataStartRowNumber());
@@ -157,6 +188,9 @@ public class DataContainer {
 				String title = calCell(titleRow.getCell(titleRow
 						.getFirstCellNum()));
 				ms.setTitle(title);
+				
+//				System.out.println("title: "+title);
+//				System.out.println("lastrow : "+lastRowNum);
 
 				// record the header
 				int columnNewIndex = 0;
@@ -168,6 +202,8 @@ public class DataContainer {
 						CellPosition cp = ms.getCulumnMap().get(calCell(cell));
 						cp.rowIndex = cell.getColumnIndex();
 						cp.newIndex = columnNewIndex;
+//						System.out.println("Index of "+key+" ROW is "+cp.rowIndex);
+//						System.out.println("Index of "+key+" NEWROW is "+cp.newIndex);
 						columnNewIndex++;
 					}
 				}
@@ -176,7 +212,6 @@ public class DataContainer {
 	}
 
 	private String calCell(Cell cell) {
-		// TODO Auto-generated method stub
 		if (cell == null) {
 			return "";
 		} else {
@@ -190,7 +225,53 @@ public class DataContainer {
 	}
 
 	private void setup() {
-		// TODO Auto-generated method stub
+		if(this.configFile.getName().endsWith(".xml")){
+			setupWithXMLFile();
+		}else{
+			setupWithPropertiesFile();
+		}
+		
+	}
+	
+	private void setupWithXMLFile(){
+		InputStream is = null;
+		try {
+			is = new FileInputStream(this.configFile);
+			JAXBContext jaxbContext = JAXBContext
+					.newInstance(MarginReportConfig.class);
+			
+			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			MarginReportConfig mrc = (MarginReportConfig) jaxbUnmarshaller.unmarshal(is);
+			
+//			String reportName = mrc.getReport_name();
+			for(ConfigSheet cs: mrc.getSheets()){
+				List<String> columnNames = new ArrayList<String>();
+				
+				for(ConfigColumn cc: cs.getColumns()){
+					columnNames.add(cc.getColumn_name());
+				}
+				
+				String[] columnNamesStrArrary = new String[columnNames.size()];
+				columnNamesStrArrary = columnNames.toArray(columnNamesStrArrary);
+				
+				MySheet ms = new MySheet(cs.getInternal_sheet_id(), cs.getSheet_name(), cs.getTitle_row_at(),
+						cs.getHeader_row_at(), cs.getData_row_start_at(), columnNamesStrArrary);
+				
+				this.sheetList.add(ms);
+			}
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		printSheetList();
+	}
+	
+	private void setupWithPropertiesFile(){
 		InputStream is = null;
 		try {
 			is = new FileInputStream(this.configFile);
@@ -272,6 +353,7 @@ public class DataContainer {
 			// force evaluation of forumlae found in cells and create a
 			// formatted String encapsulating the cells contents.
 			this.workbook = WorkbookFactory.create(fis);
+			System.out.println("open done.");
 			this.evaluator = this.workbook.getCreationHelper()
 					.createFormulaEvaluator();
 			this.formatter = new DataFormatter(true);

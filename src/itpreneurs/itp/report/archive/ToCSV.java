@@ -673,47 +673,53 @@ public class ToCSV {
         long startTime = System.currentTimeMillis();
         try {
             converter = new ToCSV();
-            if(args.length == 2) {
-                // Just the Source File/Folder and Destination Folder were
-                // passed to the main method.
-                converter.convertExcelToCSV(args[0], args[1]);
-            }
-            else if(args.length == 3){
-                // The Source File/Folder, Destination Folder and Separator
-                // were passed to the main method.
-                converter.convertExcelToCSV(args[0], args[1], args[2]);
-            }
-            else if(args.length == 4) {
-                // The Source File/Folder, Destination Folder, Separator and
-                // Formatting Convnetion were passed to the main method.
-                converter.convertExcelToCSV(args[0], args[1],
-                                            args[2], Integer.parseInt(args[3]));
-            }
-            else {
-                // None or more than four parameters were passed so display
-                //a Usage message.
-                System.out.println("Usage: java ToCSV [Source File/Folder] " +
-                    "[Destination Folder] [Separator] [Formatting Convention]\n" +
-                    "\tSource File/Folder\tThis argument should contain the name of and\n" +
-                    "\t\t\t\tpath to either a single Excel workbook or a\n" +
-                    "\t\t\t\tfolder containing one or more Excel workbooks.\n" +
-                    "\tDestination Folder\tThe name of and path to the folder that the\n" +
-                    "\t\t\t\tCSV files should be written out into. The\n" +
-                    "\t\t\t\tfolder must exist before running the ToCSV\n" +
-                    "\t\t\t\tcode as it will not check for or create it.\n" +
-                    "\tSeparator\t\tOptional. The character or characters that\n" +
-                    "\t\t\t\tshould be used to separate fields in the CSV\n" +
-                    "\t\t\t\trecord. If no value is passed then the comma\n" +
-                    "\t\t\t\twill be assumed.\n" +
-                    "\tFormatting Convention\tOptional. This argument can take one of two\n" +
-                    "\t\t\t\tvalues. Passing 0 (zero) will result in a CSV\n" +
-                    "\t\t\t\tfile that obeys Excel's formatting conventions\n" +
-                    "\t\t\t\twhilst passing 1 (one) will result in a file\n" +
-                    "\t\t\t\tthat obeys UNIX formatting conventions. If no\n" +
-                    "\t\t\t\tvalue is passed, then the CSV file produced\n" +
-                    "\t\t\t\twill obey Excel's formatting conventions.");
-                converted = false;
-            }
+            
+            String excelFile = "/Users/vincentgong/Documents/workspaces/Resource/itpreneurs/temp/test/2.xlsx";
+            String outputFolder = "/Users/vincentgong/Documents/workspaces/Resource/itpreneurs/temp/test/";
+            
+            converter.convertExcelToCSV(excelFile, outputFolder);
+            
+//            if(args.length == 2) {
+//                // Just the Source File/Folder and Destination Folder were
+//                // passed to the main method.
+//                converter.convertExcelToCSV(args[0], args[1]);
+//            }
+//            else if(args.length == 3){
+//                // The Source File/Folder, Destination Folder and Separator
+//                // were passed to the main method.
+//                converter.convertExcelToCSV(args[0], args[1], args[2]);
+//            }
+//            else if(args.length == 4) {
+//                // The Source File/Folder, Destination Folder, Separator and
+//                // Formatting Convnetion were passed to the main method.
+//                converter.convertExcelToCSV(args[0], args[1],
+//                                            args[2], Integer.parseInt(args[3]));
+//            }
+//            else {
+//                // None or more than four parameters were passed so display
+//                //a Usage message.
+//                System.out.println("Usage: java ToCSV [Source File/Folder] " +
+//                    "[Destination Folder] [Separator] [Formatting Convention]\n" +
+//                    "\tSource File/Folder\tThis argument should contain the name of and\n" +
+//                    "\t\t\t\tpath to either a single Excel workbook or a\n" +
+//                    "\t\t\t\tfolder containing one or more Excel workbooks.\n" +
+//                    "\tDestination Folder\tThe name of and path to the folder that the\n" +
+//                    "\t\t\t\tCSV files should be written out into. The\n" +
+//                    "\t\t\t\tfolder must exist before running the ToCSV\n" +
+//                    "\t\t\t\tcode as it will not check for or create it.\n" +
+//                    "\tSeparator\t\tOptional. The character or characters that\n" +
+//                    "\t\t\t\tshould be used to separate fields in the CSV\n" +
+//                    "\t\t\t\trecord. If no value is passed then the comma\n" +
+//                    "\t\t\t\twill be assumed.\n" +
+//                    "\tFormatting Convention\tOptional. This argument can take one of two\n" +
+//                    "\t\t\t\tvalues. Passing 0 (zero) will result in a CSV\n" +
+//                    "\t\t\t\tfile that obeys Excel's formatting conventions\n" +
+//                    "\t\t\t\twhilst passing 1 (one) will result in a file\n" +
+//                    "\t\t\t\tthat obeys UNIX formatting conventions. If no\n" +
+//                    "\t\t\t\tvalue is passed, then the CSV file produced\n" +
+//                    "\t\t\t\twill obey Excel's formatting conventions.");
+//                converted = false;
+//            }
         }
         // It is not wise to have such a wide catch clause - Exception is very
         // close to being at the top of the inheritance hierarchy - though it

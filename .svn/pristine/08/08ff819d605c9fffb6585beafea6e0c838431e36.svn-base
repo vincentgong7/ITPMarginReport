@@ -1,0 +1,91 @@
+/**
+ * 
+ */
+package itpreneurs.itp.report.common;
+
+import java.io.File;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
+
+/**
+ * @author vincentgong
+ *
+ */
+public class Utils {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+	}
+
+
+	public static long getUnixTimeStamp(String createdat_origin) {
+
+		// createdat_origin = "Tue Apr 21 16:48:23 +0800 2015";
+		SimpleDateFormat formatter = new SimpleDateFormat(
+				"EEE MMM dd HH:mm:ss zzzz yyyy");
+		Date date = new Date();
+		try {
+			date = formatter.parse(createdat_origin);
+			System.out.println(date.getTime());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return date.getTime();
+	}
+
+	public static int randomInt(int min, int max) {
+		
+		if(min == max){
+			return min;
+		}
+		// NOTE: Usually this should be a field rather than a method
+		// variable so that it is not re-seeded every call.
+		Random rand = new Random();
+
+		// nextInt is normally exclusive of the top value,
+		// so add 1 to make it inclusive
+		int randomNum = rand.nextInt((max - min) + 1) + min;
+
+		return randomNum;
+	}
+
+	public static String getResourceFilePath() {
+		// TODO Auto-generated method stub
+		String relativePath = Utils.class.getResource("/").getFile();
+		return relativePath;
+	}
+
+	public static String getPath() {
+		URL url = Utils.class.getProtectionDomain().getCodeSource()
+				.getLocation();
+		String filePath = null;
+		try {
+			filePath = URLDecoder.decode(url.getPath(), "utf-8");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (filePath.endsWith(".jar")) {
+			filePath = filePath.substring(0, filePath.lastIndexOf("/") + 1);
+		}
+
+		File file = new File(filePath);
+
+		// /If this abstract pathname is already absolute, then the pathname
+		// string is simply returned as if by the getPath method. If this
+		// abstract pathname is the empty abstract pathname then the pathname
+		// string of the current user directory, which is named by the system
+		// property user.dir, is returned.
+		filePath = file.getAbsolutePath();
+		return filePath;
+	}
+
+	
+
+}
